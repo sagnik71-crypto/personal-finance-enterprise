@@ -13,3 +13,5 @@
 [2026-10-31 17:25:02] [TRANSACTION_ADD] Added expense of ₹20000.0 for sagnikguha2010@gmail.com
 [2026-10-31 17:25:02] [CSV_SYNC] Exported 2 database records to CSV.
 [2026-10-31 17:34:29] [SUPPORT_TICKET] Ticket sent from sushmitaguha1976@gmail.com to sagnikguha2010@gmail.com
+[2026-10-31 17:51:21] [DATABASE_INIT] SQLite schemas verified and tables active.
+[2026-10-31 17:58:11] [DATABASE_INIT] SQLite schemas verified and tables active.
