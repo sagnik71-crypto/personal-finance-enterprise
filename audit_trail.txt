@@ -1,0 +1,15 @@
+[2026-10-31 17:15:10] [DATABASE_INIT] SQLite schemas verified and tables active.
+[2026-10-31 17:15:10] [CSV_INIT] Transaction CSV ledger created.
+[2026-10-31 17:15:10] [PICKLE_INIT] Application binary state serialized.
+[2026-10-31 17:15:42] [AUTH_LOGIN] Logged in sagnikguha2010@gmail.com via Google OAuth
+[2026-10-31 17:15:52] [AUTH_LOGIN] Logged in sagnikguha2010@gmail.com via Local Auth
+[2026-10-31 17:16:07] [AUTH_LOGIN] Logged in sagnikguha2010@gmail.com via Local Auth
+[2026-10-31 17:16:16] [AUTH_LOGIN] Logged in sagnikguha2010@gmail.com via Google OAuth
+[2026-10-31 17:20:24] [DATABASE_INIT] SQLite schemas verified and tables active.
+[2026-10-31 17:22:19] [DATABASE_INIT] SQLite schemas verified and tables active.
+[2026-10-31 17:22:44] [AUTH_LOGIN] Logged in sagnikguha2010@gmail.com via Google OAuth
+[2026-10-31 17:24:47] [TRANSACTION_ADD] Added income of ₹15000.0 for sagnikguha2010@gmail.com
+[2026-10-31 17:24:47] [CSV_SYNC] Exported 1 database records to CSV.
+[2026-10-31 17:25:02] [TRANSACTION_ADD] Added expense of ₹20000.0 for sagnikguha2010@gmail.com
+[2026-10-31 17:25:02] [CSV_SYNC] Exported 2 database records to CSV.
+[2026-10-31 17:34:29] [SUPPORT_TICKET] Ticket sent from sushmitaguha1976@gmail.com to sagnikguha2010@gmail.com
