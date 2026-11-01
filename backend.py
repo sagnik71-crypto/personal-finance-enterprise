@@ -218,8 +218,8 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
         decoded = base64.b64decode(encoded).decode("utf-8")
         user, pwd = decoded.split(":", 1)
         return user == USERNAME and pwd == PASSWORD
-    except Exception:
-      return False
+      except Exception:
+        return False
  
     def send_auth_challenge(self):
       self.send_response(401)
@@ -230,43 +230,43 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
       self.wfile.write(b"Access Denied: Password Required")
     
 
-  def create_system_backup(self):
-    """CBSE Class 12 CS Advanced Feature:
-    - Binary file serialization using pickle
-    - CSV archival for external spreadsheet viewing
-    """
-    try:
-      conn = sqlite3.connect(DB_FILE)
-      cursor = conn.cursor()
-      cursor.execute("SELECT * FROM transactions")
-      rows = cursor.fetchall()
-      conn.close()
+    def create_system_backup(self):
+      """CBSE Class 12 CS Advanced Feature:
+      - Binary file serialization using pickle
+      - CSV archival for external spreadsheet viewing
+      """
+      try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM transactions")
+        rows = cursor.fetchall()
+        conn.close()
 
-      # 1. Binary File Handling (Pickle) - Core Class 12 Syllabus
-      app_state = {
-          "timestamp": time.time(),
-          "total_records": len(rows),
-          "data": rows,
-      }
-      with open(PICKLE_FILE, "wb") as f:
-        pickle.dump(app_state, f)
+        # 1. Binary File Handling (Pickle) - Core Class 12 Syllabus
+        app_state = {
+            "timestamp": time.time(),
+            "total_records": len(rows),
+            "data": rows,
+        }
+        with open(PICKLE_FILE, "wb") as f:
+          pickle.dump(app_state, f)
 
-      # 2. CSV File Handling - Core Class 12 Syllabus
-      with open(CSV_FILE, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(
-            ["Trans ID", "Title", "Amount", "Category", "Type", "Date"]
-        )
-        for row in rows:
-          writer.writerow(row)
+        # 2. CSV File Handling - Core Class 12 Syllabus
+        with open(CSV_FILE, "w", newline="", encoding="utf-8") as f:
+          writer = csv.writer(f)
+          writer.writerow(
+              ["Trans ID", "Title", "Amount", "Category", "Type", "Date"]
+          )
+          for row in rows:
+            writer.writerow(row)
 
-      print("[AUDIT] Automated binary backup and CSV archive generated.")
-    except Exception as e:
-      print(f"[ERROR] Backup failed: {e}")
+        print("[AUDIT] Automated binary backup and CSV archive generated.")
+      except Exception as e:
+        print(f"[ERROR] Backup failed: {e}")
 
 
-  def _set_cors(self):
-    self.send_header("Access-Control-Allow-Origin", "*")
+    def _set_cors(self):
+      self.send_header("Access-Control-Allow-Origin", "*")
     # ... rest of your cors code ...
 
     def _set_cors(self):
@@ -381,11 +381,10 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
             conn.commit()
             conn.close()
 
-            log_audit_event("TRANSACTION_ADD", f"Added {trans_type} of ₹{amount} for {email}")
+    
+            log_audit_event("TRANSACTION_ADD", f"Added...")
             sync_db_to_csv()
-          log_audit_event("TRANSACTION_ADD", f"Added...")
-          sync_db_to_csv()
-          self.create_system_backup()
+            self.create_system_backup()
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
