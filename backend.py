@@ -19,11 +19,15 @@ import pickle
 import time
 import datetime
 import urllib.parse
+import base64
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # --- GLOBAL SYSTEM CONFIGURATION ---
 HOST = "0.0.0.0"
 PORT = 8081
+# --- AUTHENTICATION CONFIG ---
+USERNAME = "sagnik"
+PASSWORD = "securepassword123"
 DB_FILE = "finance_master.db"
 CSV_FILE = "transactions.csv"
 LOG_FILE = "audit_trail.txt"
@@ -203,6 +207,28 @@ def generate_suggestions(analytics):
 
 class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
     """High-performance request handler serving HTML frontends and JSON REST APIs."""
+  def check_auth(self):
+    auth_header = self.headers.get("Authorization")
+    if not auth_header:
+      return False
+    try:
+      auth_type, encoded = auth_header.split(" ", 1)
+      if auth_type.lower() != "basic":
+        return False
+      decoded = base64.b64decode(encoded).decode("utf-8")
+      user, pwd = decoded.split(":", 1)
+      return user == USERNAME and pwd == PASSWORD
+    except Exception:
+      return False
+
+  def send_auth_challenge(self):
+    self.send_response(401)
+    self.send_header(
+        "WWW-Authenticate", 'Basic realm="Personal Finance Enterprise"'
+    )
+    self.end_headers()
+    self.wfile.write(b"Access Denied: Password Required")
+    
 
     def _set_cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -215,6 +241,9 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        if not self.check_auth():
+            return self.send_auth_challenge()
+
         parsed = urllib.parse.urlparse(self.path)
         
         if parsed.path in ["/", "/index.html"]:
@@ -265,6 +294,8 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_POST(self):
+        if not self.check_auth():
+            return self.send_auth_challenge()
         parsed = urllib.parse.urlparse(self.path)
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length)
