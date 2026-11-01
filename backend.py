@@ -19,15 +19,13 @@ import pickle
 import time
 import datetime
 import urllib.parse
-import base64
+
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # --- GLOBAL SYSTEM CONFIGURATION ---
 HOST = "0.0.0.0"
 PORT = 8081
 # --- AUTHENTICATION CONFIG ---
-USERNAME = "sagnik"
-PASSWORD = "securepassword123"
 DB_FILE = "finance_master.db"
 CSV_FILE = "transactions.csv"
 LOG_FILE = "audit_trail.txt"
