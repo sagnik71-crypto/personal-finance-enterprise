@@ -207,27 +207,6 @@ def generate_suggestions(analytics):
 
 class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
     """High-performance request handler serving HTML frontends and JSON REST APIs."""
-    def check_auth(self):
-      auth_header = self.headers.get("Authorization")
-      if not auth_header:
-        return False
-      try:
-        auth_type, encoded = auth_header.split(" ", 1)
-        if auth_type.lower() != "basic":
-          return False
-        decoded = base64.b64decode(encoded).decode("utf-8")
-        user, pwd = decoded.split(":", 1)
-        return user == USERNAME and pwd == PASSWORD
-      except Exception:
-        return False
- 
-    def send_auth_challenge(self):
-      self.send_response(401)
-      self.send_header(
-          "WWW-Authenticate", 'Basic realm="Personal Finance Enterprise"'
-      )
-      self.end_headers()
-      self.wfile.write(b"Access Denied: Password Required")
     
 
     def create_system_backup(self):
@@ -280,8 +259,6 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if not self.check_auth():
-            return self.send_auth_challenge()
 
         parsed = urllib.parse.urlparse(self.path)
         
@@ -333,8 +310,7 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_POST(self):
-        if not self.check_auth():
-            return self.send_auth_challenge()
+
         parsed = urllib.parse.urlparse(self.path)
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length)
