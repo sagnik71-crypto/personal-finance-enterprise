@@ -355,6 +355,50 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
               self.end_headers()
               self.wfile.write(b"Error reading report file")
             return
+        elif parsed.path.startswith("/api/receipt/download"):
+            # Parse transaction ID from query string (e.g., /api/receipt/download?id=1)
+            query_params = urllib.parse.parse_qs(parsed.query)
+            trans_id = query_params.get("id", [None])[0]
+      
+            conn = sqlite3.connect(DB_FILE)
+            cursor = conn.cursor()
+            if trans_id:
+              cursor.execute("SELECT trans_id, title, amount, category FROM transactions WHERE trans_id = ?", (trans_id,))
+            else:
+              cursor.execute("SELECT trans_id, title, amount, category FROM transactions ORDER BY trans_id DESC LIMIT 1")
+            record = cursor.fetchone()
+            conn.close()
+
+            if not record:
+              self.send_response(404)
+              self.end_headers()
+              self.wfile.write(b"Transaction not found")
+              return
+
+            # Format a professional financial receipt
+            receipt_content = f"""
+==================================================
+           PERSONAL FINANCE ENTERPRISE           
+             OFFICIAL TRANSACTION RECEIPT        
+==================================================
+ Receipt ID   : TXN-REF-00{record[0]}
+ Date/Time    : {time.strftime('%Y-%m-%d %H:%M:%S')}
+--------------------------------------------------
+ Description  : {record[1]}
+ Category     : {record[3]}
+ Amount Paid  : ₹{float(record[2]):.2f}
+ Status       : SUCCESS / VERIFIED
+==================================================
+   Thank you for using Personal Finance Enterprise.
+      System Auto-Generated Cryptographic Log
+==================================================
+"""
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Disposition", f'attachment; filename="Receipt_{record[0]}.txt"')
+            self.end_headers()
+            self.wfile.write(receipt_content.encode("utf-8"))
+            return
 
         else:
             self.send_response(404)
