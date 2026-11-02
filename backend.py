@@ -238,10 +238,43 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
             writer.writerow(row)
 
         print("[AUDIT] Automated binary backup and CSV archive generated.")
+        self.generate_analytics_report()
       except Exception as e:
         print(f"[ERROR] Backup failed: {e}")
 
 
+    def generate_analytics_report(self):
+      """CBSE Class 12 CS Advanced Feature:
+      - Advanced SQL Aggregate Functions (GROUP BY, SUM, COUNT)
+      - Structured text file archival for financial health audit
+      """
+      try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+      
+        # Advanced SQL query grouping transactions by category
+        cursor.execute("SELECT category, SUM(amount), COUNT(*) FROM transactions GROUP BY category")
+        summary = cursor.fetchall()
+        conn.close()
+
+        # Write formatted analytical report to a text file
+        report_file = "financial_report.txt"
+        with open(report_file, "w", encoding="utf-8") as f:
+          f.write("==================================================\n")
+          f.write("    PERSONAL FINANCE ENTERPRISE: AUDIT REPORT     \n")
+          f.write("==================================================\n")
+          f.write(f"{'Category':<15} | {'Total Spent':<12} | {'Count'}\n")
+          f.write("-" * 50 + "\n")
+        
+          for row in summary:
+            category, total_amt, count = row
+            f.write(f"{str(category):<15} | ₹{float(total_amt):<11.2f} | {int(count)}\n")
+          
+            f.write("==================================================\n")
+
+        print("[AUDIT] Category-wise analytics report generated successfully.")
+      except Exception as e:
+        print(f"[ERROR] Analytics generation failed: {e}")
     def _set_cors(self):
       self.send_header("Access-Control-Allow-Origin", "*")
     # ... rest of your cors code ...
@@ -303,6 +336,26 @@ class FinanceEnterpriseHandler(BaseHTTPRequestHandler):
             self._set_cors()
             self.end_headers()
             self.wfile.write(json.dumps(payload).encode('utf-8'))
+        # --- INSERT YOUR NEW ENDPOINT HERE ---
+        elif parsed.path == "/api/analytics/download":
+            # Generate fresh report
+            self.generate_analytics_report()
+      
+            # Read the text file and send it as a response
+            try:
+              with open("financial_report.txt", "r", encoding="utf-8") as f:
+                content = f.read()
+          
+              self.send_response(200)
+              self.send_header("Content-Type", "text/plain; charset=utf-8")
+              self.end_headers()
+              self.wfile.write(content.encode("utf-8"))
+            except Exception:
+              self.send_response(500)
+              self.end_headers()
+              self.wfile.write(b"Error reading report file")
+            return
+
         else:
             self.send_response(404)
             self.end_headers()
