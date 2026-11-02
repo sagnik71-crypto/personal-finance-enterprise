@@ -172,8 +172,17 @@
       <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl">
         <h2 class="text-xl font-bold text-gray-100 mb-6">Visual Spending Analytics</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div class="h-72 flex justify-center"><canvas id="categoryChart"></canvas></div>
-          <div class="h-72 flex justify-center"><canvas id="incomeExpenseChart"></canvas></div>
+          
+            <!-- Category Chart Container -->
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            
+            <!-- Income vs Expense Chart Container -->
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="incomeExpenseChart"></canvas>
+            </div>
+
         </div>
       </div>
     </section>
