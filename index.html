@@ -256,6 +256,9 @@
     let currentUser = JSON.parse(localStorage.getItem("finance_user")) || { name: "Guest User", email: "sagnikguha2010@gmail.com", provider: "Default" };
     let categoryChartInstance = null;
     let incomeExpenseChartInstance = null;
+    function downloadReceipt() {
+    window.location.href = '/api/receipt/download';
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("txDate").value = new Date().toISOString().split('T')[0];
