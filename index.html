@@ -417,43 +417,40 @@
     function renderCharts() {
       if (!window.latestAnalytics) return;
       const analytics = window.latestAnalytics;
-      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-      const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+    
+      const categoryCtx = document.getElementById('categoryChart');
+      const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
+    
+      if (!categoryCtx || !incomeExpenseCtx) return;
 
-      if (categoryChartInstance) categoryChartInstance.destroy();
-      if (incomeExpenseChartInstance) incomeExpenseChartInstance.destroy();
+      if (window.categoryChartInstance) window.categoryChartInstance.destroy();
+      if (window.incomeExpenseChartInstance) window.incomeExpenseChartInstance.destroy();
 
-      categoryChartInstance = new Chart(categoryCtx, {
+      window.categoryChartInstance = new Chart(categoryCtx, {
         type: 'doughnut',
         data: {
-          labels: Object.keys(analytics.category_breakdown),
-          datasets: [{ data: Object.values(analytics.category_breakdown), backgroundColor: ['#10b981', '#f43f5e', '#3b82f6', '#f59e0b', '#8b5cf6'] }]
-        }
-      });
+            labels: Object.keys(analytics.category_breakdown || {}),
+            datasets: [{ data: Object.values(analytics.category_breakdown || {}) }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
 
-      incomeExpenseChartInstance = new Chart(incomeExpenseCtx, {
+    window.incomeExpenseChartInstance = new Chart(incomeExpenseCtx, {
         type: 'bar',
         data: {
-          labels: ['Total Income', 'Total Expense'],
-          datasets: [{
-            label: 'Amount (₹)',
-            data: [analytics.total_income, analytics.total_expense],
-            backgroundColor: ['#10b981', '#ef4444']
-          }]
+            labels: ['Total Income', 'Total Expense'],
+            datasets: [{
+                label: 'Amount',
+                data: [analytics.total_income || 0, analytics.total_expense || 0],
+                backgroundColor: ['#10b981', '#ef4444']
+            }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-                display: true,
-                position: 'bottom'
-            }
-          }
-        }
-      
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+  
 
-      });
+      
 
     function handleSupportSubmit(e) {
       e.preventDefault();
