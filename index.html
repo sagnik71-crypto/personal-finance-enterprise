@@ -169,19 +169,20 @@
 
     <!-- VISUAL GRAPHS -->
     <section id="view-analytics" class="hidden space-y-6">
-      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl">
+    <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-xl">
         <h2 class="text-xl font-bold text-gray-100 mb-6">Visual Spending Analytics</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          
+        <div class="space-y-8">
+            
             <!-- Category Chart Container -->
-            <div style="position: relative; height: 300px; width: 100%;">
+            <div style="position: relative; height: 260px; width: 100%;">
                 <canvas id="categoryChart"></canvas>
             </div>
             
-            <!-- Income vs Expense Chart Container -->
-            <div style="position: relative; height: 300px; width: 100%;">
+            <!-- Income vs Expense Chart Container with clean separation -->
+            <div style="position: relative; height: 240px; width: 100%; border-top: 1px solid #374151; padding-top: 20px;">
                 <canvas id="incomeExpenseChart"></canvas>
             </div>
+
 
         </div>
       </div>
