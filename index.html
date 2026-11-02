@@ -435,10 +435,25 @@
         type: 'bar',
         data: {
           labels: ['Total Income', 'Total Expense'],
-          datasets: [{ data: [analytics.total_income, analytics.total_expense], backgroundColor: ['#10b981', '#f43f5e'] }]
+          datasets: [{
+            label: 'Amount (₹)',
+            data: [analytics.total_income, analytics.total_expense],
+            backgroundColor: ['#10b981', '#ef4444']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+          }
         }
+      
+
       });
-    }
 
     function handleSupportSubmit(e) {
       e.preventDefault();
