@@ -340,7 +340,10 @@
     });
 
     function toggleMobileMenu() {
-      document.getElementById("mobileMenu").classList.toggle("hidden");
+      const menu =  document.getElementById("mobileMenu");
+      if menu {
+        menu.classList.toggle("hidden");
+      }
     }
 
     function switchTab(tabId) {
@@ -359,8 +362,18 @@
         renderCharts();
       }
     }
-    function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
-    function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
+    function openAuthModal() { document.getElementById("authModal") {
+      const modal = document.getElementById("authModal");
+      if (modal) {
+        modal.classList.remove("hidden");
+      }
+    }
+    function closeAuthModal() { document.getElementById("authModal")
+      const modal = document.getElementById("authModal");
+      if (modal) {
+        modal.classList.add("hidden");
+      }
+    }
 
     function applySavedUserUI() {
       document.getElementById("userProfileName").innerText = currentUser.name;
