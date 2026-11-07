@@ -330,7 +330,11 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("txDate").value = new Date().toISOString().split('T')[0];
+      applyTheme();
+      const txDateEl =  document.getElementById("txDate");
+      if (txDateEl) {
+        txDateEl.value = new Date().toISOString().split('T')[0];
+      }
       applySavedUserUI();
       fetchDashboardData();
     });
