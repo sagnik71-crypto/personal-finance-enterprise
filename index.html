@@ -63,6 +63,10 @@
           <p id="userProfileName" class="text-xs font-semibold text-gray-200">Guest User</p>
           <p id="userProfileEmail" class="text-[10px] sm:text-xs text-gray-400 truncate max-w-[120px] sm:max-w-none">sagnikguha2010@gmail.com</p>
         </div>
+        <button onclick="openSettingsModal()" class="p-2 rounded-xl bg-gray-800 text-gray-200 border border-gray-700 hover:bg-gray-700 transition flex items-center space-x-2 text-xs font-medium">
+          <span>⚙️</span>
+          <span class="hidden sm:inline">Settings</span>
+        </button>
         <button id="authBtn" onclick="openAuthModal()" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition shadow-md shadow-emerald-600/30">
           Sign In
         </button>
@@ -80,6 +84,7 @@
       <button onclick="switchTab('suggestions'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800">AI Advice</button>
       <button onclick="switchTab('faq'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800">FAQ</button>
       <button onclick="switchTab('contact'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800">Contact Us</button>
+      <button onclick="openSettingsModal(); toggleMobileMenu();" class="w-full text-left px-4 py-2 hover:bg-gray-800 text-sm font-medium text-gray-200">⚙️ Settings</button>
     </div>
   </header>
 
@@ -446,11 +451,7 @@
             }]
         },
         options: { responsive: true, maintainAspectRatio: false }
-    });
-}
-  
-
-      
+    }); 
 
     function handleSupportSubmit(e) {
       e.preventDefault();
@@ -464,6 +465,120 @@
         })
       }).then(res => res.json()).then(data => alert(data.message));
     }
+    
+    // Modal Visibility
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+      loadSettingsUI();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+
+    // Theme Switcher Logic
+    function setTheme(mode) {
+      localStorage.setItem('theme_preference', mode);
+      applyTheme();
+    }
+
+    function applyTheme() {
+      const pref = localStorage.getItem('theme_preference') || 'dark';
+      const isDark = pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      loadSettingsUI();
+    }
+
+    // Save & Load Individual Preferences
+    function saveSetting(key, val) {
+      localStorage.setItem('app_setting_' + key, val);
+    }
+
+    function loadSettingsUI() {
+      const pref = localStorage.getItem('theme_preference') || 'dark';
+      ['Dark', 'Light', 'System'].forEach(m => {
+        const btn = document.getElementById('themeBtn' + m);
+        if (btn) {
+          if (pref.toLowerCase() === m.toLowerCase()) {
+              btn.classList.add('border-emerald-500', 'text-emerald-400', 'bg-gray-700');
+          } else {
+              btn.classList.remove('border-emerald-500', 'text-emerald-400', 'bg-gray-700');
+          }
+        }
+      });
+
+      const savedCurrency = localStorage.getItem('app_setting_currency') || '₹';
+      const currencySelect = document.getElementById('currencySelect');
+      if (currencySelect) currencySelect.value = savedCurrency;
+
+      const savedDefaultType = localStorage.getItem('app_setting_defaultType') || 'expense';
+      const typeSelect = document.getElementById('defaultTypeSelect');
+      if (typeSelect) typeSelect.value = savedDefaultType;
+    }
+
+    // Automatically apply settings when script loads
+    (function initSettings() {
+      applyTheme();
+    })();
   </script>
 </body>
+<!-- Settings Modal -->
+<div id="settingsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6 text-gray-100 shadow-2xl relative">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-gray-800">
+            <h3 class="text-lg font-bold flex items-center gap-2">⚙️ Application Settings</h3>
+            <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="py-4 space-y-5">
+            <!-- Appearance / Theme Selection -->
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Theme Mode</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setTheme('dark')" id="themeBtnDark" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">🌙 Dark</button>
+                    <button onclick="setTheme('light')" id="themeBtnLight" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">☀️ Light</button>
+                    <button onclick="setTheme('system')" id="themeBtnSystem" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">💻 System</button>
+                </div>
+            </div>
+
+            <!-- Currency Settings -->
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Default Currency</label>
+                <select id="currencySelect" onchange="saveSetting('currency', this.value)" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="₹">₹ (INR - Indian Rupee)</option>
+                    <option value="$">$ (USD - US Dollar)</option>
+                    <option value="€">€ (EUR - Euro)</option>
+                    <option value="£">£ (GBP - British Pound)</option>
+                </select>
+            </div>
+
+            <!-- Default Entry Type -->
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Default Transaction Type</label>
+                <select id="defaultTypeSelect" onchange="saveSetting('defaultType', this.value)" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+
+            <!-- Application Info -->
+            <div class="pt-3 border-t border-gray-800 text-xs text-gray-400 flex justify-between items-center">
+                <span>Version: <strong>v2.4.0 (Enterprise)</strong></span>
+                <span>Backend: <strong>Python/SQLite</strong></span>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="pt-4 border-t border-gray-800 flex justify-end">
+            <button onclick="closeSettingsModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl text-sm transition">Done</button>
+        </div>
+    </div>
+</div>
 </html>
