@@ -346,12 +346,19 @@
     function switchTab(tabId) {
       const tabs = ['dashboard', 'analytics', 'suggestions', 'faq', 'contact'];
       tabs.forEach(t => {
-        document.getElementById(`view-${t}`).classList.add('hidden');
+        const el =  document.getElementById(`view-${t}`);
+        if (el) {
+          el.classList.add('hidden');
+        }  
       });
-      document.getElementById(`view-${tabId}`).classList.remove('hidden');
-      if (tabId === 'analytics') renderCharts();
+      const target = document.getElementById(`view-${tabId}`);
+      if (target) {
+        target.classList.remove('hidden');     
+      }
+      if (tabId === 'analytics' && typeof renderCharts === 'function') {
+        renderCharts();
+      }
     }
-
     function openAuthModal() { document.getElementById("authModal").classList.remove("hidden"); }
     function closeAuthModal() { document.getElementById("authModal").classList.add("hidden"); }
 
