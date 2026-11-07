@@ -530,81 +530,50 @@
             labels: ['Total Income', 'Total Expense'],
             datasets: [{
                 label: 'Amount',
-                data: [analytics.total_income || 0, analytics.total_expense || 0],
-                backgroundColor: ['#10b981', '#ef4444']
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    }); 
-
-    function handleSupportSubmit(e) {
-      e.preventDefault();
-      fetch("/api/support", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_email: document.getElementById("ticketEmail").value,
-          recipient_email: "sagnikguha2010@gmail.com",
-          message: document.getElementById("ticketMessage").value
-        })
-      }).then(res => res.json()).then(data => { alert(data.message || "Success!");
-      })
+    // Toggle mobile navigation dropdown
+    function toggleMobileMenu() {
+      const menu = document.getElementById("mobileMenu");
+      if (menu) {
+        menu.classList.toggle("hidden");
+      }
     }
-    </script>
+
+    // Switch tabs and automatically close mobile menu
+    function switchTab(tabId) {
+      const tabs = ['dashboard', 'analytics', 'suggestions', 'faq', 'contact'];
     
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-md p-6 text-gray-100 shadow-2xl relative">
-        <!-- Modal Header -->
-        <div class="flex justify-between items-center pb-4 border-b border-gray-800">
-          <h3 class="text-lg font-bold flex items-center gap-2">⚙️ Application Settings</h3>
-          <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
-        </div>
+      tabs.forEach(function(t) {
+          const el = document.getElementById('view-' + t);
+          if (el) {
+            el.classList.add('hidden');
+          }
+      });
 
-        <!-- Modal Body -->
-        <div class="py-4 space-y-5">
-          <!-- Appearance / Theme Selection -->
-          <div>
-             <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Theme Mode</label>
-             <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setTheme('dark')" id="themeBtnDark" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">🌙 Dark</button>
-                    <button onclick="setTheme('light')" id="themeBtnLight" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">☀️ Light</button>
-                    <button onclick="setTheme('system')" id="themeBtnSystem" class="py-2 px-3 rounded-xl border border-gray-700 bg-gray-800 text-xs font-medium hover:bg-gray-700">💻 System</button>
-             </div>
-          </div>
+      const target = document.getElementById('view-' + tabId);
+      if (target) {
+        target.classList.remove('hidden');
+      }
 
-          <!-- Currency Settings -->
-          <div>
-             <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Default Currency</label>
-             <select id="currencySelect" onchange="saveSetting('currency', this.value)" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="₹">₹ (INR - Indian Rupee)</option>
-                    <option value="$">$ (USD - US Dollar)</option>
-                    <option value="€">€ (EUR - Euro)</option>
-                    <option value="£">£ (GBP - British Pound)</option>
-             </select>
-          </div>
+      const menu = document.getElementById("mobileMenu");
+      if (menu) {
+        menu.classList.add("hidden");
+      }
 
-          <!-- Default Entry Type -->
-          <div>
-             <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Default Transaction Type</label>
-             <select id="defaultTypeSelect" onchange="saveSetting('defaultType', this.value)" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="expense">Expense</option>
-                    <option value="income">Income</option>
-             </select>
-          </div>
+      if (tabId === 'analytics' && typeof renderCharts === 'function') {
+        renderCharts();
+      }
+    }
 
-          <!-- Application Info -->
-          <div class="pt-3 border-t border-gray-800 text-xs text-gray-400 flex justify-between items-center">
-             <span>Version: <strong>v2.4.0 (Enterprise)</strong></span>
-             <span>Backend: <strong>Python/SQLite</strong></span>
-          </div>
-        </div>
+    // Modal controls for Settings
+    function openSettingsModal() {
+      const modal = document.getElementById("settingsModal");
+      if (modal) modal.classList.remove("hidden");
+    }
 
-        <!-- Modal Footer -->
-        <div class="pt-4 border-t border-gray-800 flex justify-end">
-           <button onclick="closeSettingsModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl text-sm transition">Done</button>
-        </div>
-    </div>
-</div>
+    function closeSettingsModal() {
+      const modal = document.getElementById("settingsModal");
+      if (modal) modal.classList.add("hidden");
+    }
+</script>         
 </body>
 </html>
